@@ -11,6 +11,7 @@ email varchar(255) not null,
 about text,
 createdat timestamp default current_timestamp
 );
+alter table user add password text not null;
 
 create table follow(
 id int not null auto_increment primary key,
