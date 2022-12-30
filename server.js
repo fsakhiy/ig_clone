@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const jwtSecretKey = process.env.JWT_SECRET
 
 app.use(express.json())
+app.use('/static', express.static(__dirname + '/public'))
 
 const dbcon = mysql.createConnection({
     host: process.env.DBHOST,
@@ -107,7 +108,7 @@ app.get('/posts', (req, res) => {
                 if (err) throw err
                 const comments = resultc
                 const posts = {
-                    username: username,
+                    username: username, 
                     post: post,
                     likes: likes,
                     comments: comments

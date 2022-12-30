@@ -1,2 +1,5 @@
 node_modules/
 .env
+staticfileserver.js
+public/*
+multer.js
