@@ -6,6 +6,20 @@ const port = process.env.PORT || 4000
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const jwtSecretKey = process.env.JWT_SECRET
+const multer = require('multer')
+const path = require('path')
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "public")
+    },
+    filename: (req, file, cb) => {
+        const name = Date.now() + path.parse(file.originalname).ext
+        cb(null, name)
+    }
+})
+
+const upload = multer({storage: storage})
 
 app.use(express.json())
 app.use('/static', express.static(__dirname + '/public'))
@@ -126,6 +140,19 @@ app.get('/posts', (req, res) => {
                 res.json(posts)
             })
         })
+    })
+})
+
+app.post('/upload',  upload.single('public'), (req, res) => {
+    res.send()
+})
+
+app.get('/commentlikes/:postid/:commentid', (req, res) => {
+    const {postid, commentid} = req.params
+    sql = `select count(*) as likes from commentlikes where postid=${postid} && commentid=${commentid}`
+    dbcon.query(sql, (err, result) => {
+        if (err) throw err
+        res.json(result)
     })
 })
 
