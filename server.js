@@ -92,6 +92,15 @@ app.post('/comments', auth, (req, res) => {
     })
 })
 
+app.post('/likecomments', auth, (req, res) => {
+    const {postid, commentid} = req.body, userid = req.userid
+    const sql = `insert into commentlikes(commentid, postid, userid) value (${commentid}, ${postid}, ${userid})`
+    dbcon.query(sql, (err) => {
+        if (err) throw err
+        res.status(200).send()
+    })
+})
+
 app.get('/posts', (req, res) => {
     const sql = `select t1.username, t0.post, t0.createdat, t0.id from post t0 left join user t1 on t0.createdby=t1.id`
     dbcon.query(sql, (err, result) => {
@@ -107,6 +116,7 @@ app.get('/posts', (req, res) => {
             dbcon.query(fetchComments, (err, resultc) => {
                 if (err) throw err
                 const comments = resultc
+                const commentid = JSON.parse(JSON.stringify(resultc)).id
                 const posts = {
                     username: username, 
                     post: post,
