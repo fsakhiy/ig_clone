@@ -12,6 +12,7 @@ about text,
 createdat timestamp default current_timestamp
 );
 alter table user add password text not null;
+alter table user add unique(username, email);
 
 create table follow(
 id int not null auto_increment primary key,
@@ -26,6 +27,8 @@ id int not null auto_increment primary key,
 post text not null,
 createdat timestamp default current_timestamp
 );
+alter table post add createdby int not null;
+alter table post add constraint foreign key(createdby) references user(id);
 
 create table likes(
 id int not null primary key auto_increment,
@@ -50,3 +53,8 @@ desc follow;
 desc likes;
 desc post;
 desc user;
+
+select * from user;
+select * from post;
+
+select t1.username, t0.post, t0.createdat from post t0 left join user t1 on t0.createdby=t1.id where t0.createdby=1;
