@@ -48,6 +48,14 @@ foreign key (userid) references user(id)
 );
 alter table comments add createdat timestamp default current_timestamp;
 
+create table commentlikes(
+id int not null primary key auto_increment,
+commentid int not null,
+userid int not null,
+foreign key(commentid) references comments(id),
+foreign key(userid) references user(id)
+);
+
 desc comments;
 desc follow;
 desc likes;
@@ -58,3 +66,11 @@ select * from user;
 select * from post;
 
 select t1.username, t0.post, t0.createdat from post t0 left join user t1 on t0.createdby=t1.id where t0.createdby=1;
+
+insert into likes(postid, userid) value (1,1);
+insert into comments(postid, userid, comment) value (1,1,"this is ig's first comment");
+insert into comments(postid, userid, comment) value (1,1,"this is ig's second comment");
+
+select count(*) as likes from likes where postid=1;
+select userid, comment from comments;
+select t1.username, t2.comment from user t1 right join comments t2 on t2.userid=t1.id;
